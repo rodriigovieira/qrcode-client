@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:qrcode_client/screens/HomePage/fab_with_animation.dart';
+import 'package:qrcode_client/screens/QRCodePage/qr_code_page.dart';
+import 'package:qrcode_client/screens/ScanPage/scan_page.dart';
 
 class SpeedDialButtons extends StatefulWidget {
   const SpeedDialButtons({
@@ -14,11 +16,6 @@ class SpeedDialButtons extends StatefulWidget {
 
 class _SpeedDialButtonsState extends State<SpeedDialButtons>
     with TickerProviderStateMixin {
-  static const List<IconData> icons = const [
-    Icons.qr_code,
-    Icons.camera_alt,
-  ];
-
   AnimationController _controller;
 
   @override
@@ -39,17 +36,29 @@ class _SpeedDialButtonsState extends State<SpeedDialButtons>
     }
   }
 
+  void goToScanPage() {
+    Navigator.pushNamed(context, ScanPage.pageId);
+  }
+
+  void goToQRCodePage() {
+    Navigator.pushNamed(context, QRCodePage.pageId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        ...List.generate(icons.length, (int index) {
-          return FABWithAnimation(
-            controller: _controller,
-            icon: icons[index],
-          );
-        }).toList(),
+        FABWithAnimation(
+          controller: _controller,
+          icon: Icons.camera_alt,
+          onPressed: goToScanPage,
+        ),
+        FABWithAnimation(
+          controller: _controller,
+          icon: Icons.qr_code,
+          onPressed: goToQRCodePage,
+        ),
         Container(
           margin: EdgeInsets.only(top: 10),
           child: FloatingActionButton(

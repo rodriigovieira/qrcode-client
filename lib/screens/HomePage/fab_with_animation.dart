@@ -5,10 +5,12 @@ class FABWithAnimation extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.icon,
+    @required this.onPressed,
   }) : super(key: key);
 
   final AnimationController controller;
   final IconData icon;
+  final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class FABWithAnimation extends StatelessWidget {
           heroTag: null,
           mini: true,
           child: Icon(icon),
-          onPressed: () {},
+          onPressed: onPressed,
         ),
       ),
     );

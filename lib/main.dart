@@ -17,7 +17,6 @@ class QRCodeApp extends StatelessWidget {
         QRCodePage.pageId: (_) => QRCodePage(),
       },
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
     );
   }
 }

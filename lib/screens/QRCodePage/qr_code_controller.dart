@@ -2,15 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:qrcode_client/constants.dart';
+import 'package:qrcode_client/interfaces/http_client_interface.dart';
 import 'package:qrcode_client/models/seed_model.dart';
+import 'package:qrcode_client/services/http_client.dart';
 
 class QRCodeController extends ChangeNotifier {
   bool loading = false;
   bool hasError = false;
   String seed = "";
   int secondsLeft = 0;
+
+  IClientHttp httpClient = ClientHttpService();
 
   QRCodeController() {
     handleLoading();
@@ -34,11 +36,10 @@ class QRCodeController extends ChangeNotifier {
     hasError = false;
     notifyListeners();
 
-    var response = await http.get("$kAPIBaseUrl/seed");
-    print(response.statusCode);
+    try {
+      var response = await httpClient.get("/seed");
 
-    if (response.statusCode == 200) {
-      SeedModel data = SeedModel.fromJson(jsonDecode(response.body));
+      SeedModel data = SeedModel.fromJson(response);
 
       DateTime expireDate = DateTime.parse(data.expiresAt);
       Duration timeLeft = expireDate.difference(DateTime.now());
@@ -50,7 +51,8 @@ class QRCodeController extends ChangeNotifier {
       notifyListeners();
 
       updateTimeLeft();
-    } else {
+    } catch (e) {
+      loading = false;
       hasError = true;
       notifyListeners();
     }

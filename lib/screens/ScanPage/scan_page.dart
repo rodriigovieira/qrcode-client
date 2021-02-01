@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qrcode_client/constants.dart';
+import 'package:qrcode_client/models/verification_model.dart';
 
 class ScanPage extends StatefulWidget {
   static const String pageId = "/scan_page";
@@ -17,7 +19,7 @@ class _ScanPageState extends State<ScanPage> {
 
   StreamSubscription cameraStreamSubscription;
   Stream cameraStream;
-  
+
   bool isValid = false;
   bool hasLoadedCode = false;
 
@@ -45,8 +47,11 @@ class _ScanPageState extends State<ScanPage> {
     var response = await get("$kAPIBaseUrl/seed/$data");
 
     if (response.statusCode == 200) {
+      VerificationModel verification =
+          VerificationModel.fromJson(jsonDecode(response.body));
+
       setState(() {
-        isValid = response.body == "true";
+        isValid = verification.isValid;
         hasLoadedCode = true;
       });
     }

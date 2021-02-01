@@ -37,8 +37,9 @@ Each page contains a _controller_ file, where all the logic is handled. The exce
 
 Each page also will have upon necessity a folder called `components`, where all the widgets are extracted and organized. This will facilitate the re-usability of the widgets and scalability of the project.
 
-*constants.dart*: file to facilitate the organization of constant variables, such as strings and common elements. This avoids repetition and typos, plus making it easier to apply changes in the future.
-*models/*: schematization of our business logic. The responses from the API are schematized at this folder to facilitate its use in the future. A tool called JSON to Dart was used to generate the helper methods.
+**constants.dart**: file to facilitate the organization of constant variables, such as strings and common elements. This avoids repetition and typos, plus making it easier to apply changes in the future.
+
+**models/**: schematization of our business logic. The responses from the API are schematized at this folder to facilitate its use in the future. A tool called JSON to Dart was used to generate the helper methods.
 
 ## Installing the project
 

@@ -1,67 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:qrcode_client/constants.dart';
-import 'package:qrcode_client/models/verification_model.dart';
+import 'package:provider/provider.dart';
+import 'package:qrcode_client/screens/ScanPage/components/qr_code_with_refresh.dart';
+import 'package:qrcode_client/screens/ScanPage/scan_controller.dart';
 
-class ScanPage extends StatefulWidget {
+class ScanPage extends StatelessWidget {
   static const String pageId = "/scan_page";
-
-  @override
-  _ScanPageState createState() => _ScanPageState();
-}
-
-class _ScanPageState extends State<ScanPage> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
-  StreamSubscription cameraStreamSubscription;
-  Stream cameraStream;
-
-  bool isValid = false;
-  bool hasLoadedCode = false;
-
-  void scanAgain() {
-    setState(() {
-      hasLoadedCode = false;
-    });
-
-    cameraStreamSubscription = cameraStream.listen((event) {
-      checkIfValid(event.code);
-      cameraStreamSubscription.cancel();
-    });
-  }
-
-  void onQRViewCreated(QRViewController controller) async {
-    cameraStream = controller.scannedDataStream.asBroadcastStream();
-
-    cameraStreamSubscription = cameraStream.listen((event) {
-      checkIfValid(event.code);
-      cameraStreamSubscription.cancel();
-    });
-  }
-
-  void checkIfValid(String data) async {
-    var response = await get("$kAPIBaseUrl/seed/$data");
-
-    if (response.statusCode == 200) {
-      VerificationModel verification =
-          VerificationModel.fromJson(jsonDecode(response.body));
-
-      setState(() {
-        isValid = verification.isValid;
-        hasLoadedCode = true;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    cameraStreamSubscription.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,57 +23,30 @@ class _ScanPageState extends State<ScanPage> {
               child: Container(
                 height: 300,
                 width: 300,
-                child: Stack(
-                  children: [
-                    Opacity(
-                      opacity: hasLoadedCode ? 0.3 : 1,
-                      child: QRView(
-                        onQRViewCreated: onQRViewCreated,
-                        key: qrKey,
-                      ),
-                    ),
-                    Visibility(
-                      visible: hasLoadedCode,
-                      child: InkWell(
-                        onTap: scanAgain,
-                        child: Center(
-                          child: Container(
-                            height: 120,
-                            width: 120,
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(Icons.refresh, size: 28),
-                                SizedBox(height: 5),
-                                Text("Scan again?"),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: QRCodeWithRefresh(),
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Visibility(
-              visible: hasLoadedCode,
-              child: Text(
-                isValid ? "The QR Code is valid!" : "The QR Code is not valid!",
-                style: TextStyle(
-                  color: isValid ? Colors.green : Colors.red,
+          Consumer<ScanController>(builder: (
+            BuildContext context,
+            ScanController controller,
+            Widget child,
+          ) {
+            return Expanded(
+              flex: 1,
+              child: Visibility(
+                visible: controller.hasLoadedCode,
+                child: Text(
+                  controller.isValid
+                      ? "The QR Code is valid!"
+                      : "The QR Code is not valid!",
+                  style: TextStyle(
+                    color: controller.isValid ? Colors.green : Colors.red,
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

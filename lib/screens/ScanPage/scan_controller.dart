@@ -45,7 +45,7 @@ class ScanController extends ChangeNotifier {
     cameraStreamSubscription = cameraStream.listen(handleStreamListener);
   }
 
-  void checkIfValid(String data) async {
+  Future<void> checkIfValid(String data) async {
     try {
       var response = await httpClient.get("/seed/$data");
 

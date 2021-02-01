@@ -29,7 +29,7 @@ class QRCodeController extends ChangeNotifier {
     });
   }
 
-  void handleLoading() async {
+  Future<void> handleLoading() async {
     loading = true;
     hasError = false;
     notifyListeners();

@@ -23,6 +23,7 @@ class _QRCodePageState extends State<QRCodePage> {
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (secondsLeft < 1) {
         timer.cancel();
+        handleLoading();
         return;
       }
 
@@ -33,6 +34,10 @@ class _QRCodePageState extends State<QRCodePage> {
   }
 
   void handleLoading() async {
+    setState(() {
+      loading = true;
+    });
+
     var response = await get("$kAPIBaseUrl/seed");
 
     if (response.statusCode == 200) {

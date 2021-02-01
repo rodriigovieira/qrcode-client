@@ -13,13 +13,15 @@ class ScanController extends ChangeNotifier {
 
   bool isValid = false;
   bool hasLoadedCode = false;
+  bool hasError = false;
 
   void scanAgain() {
     // The stream is recreated whenever
     // the uses tap on the "scan again" button.
     hasLoadedCode = false;
+    hasError = false;
     notifyListeners();
-    
+
     // The stream is destroyed and recreated
     // so that when it's scanned again,
     // the last value found isn't kept,
@@ -27,7 +29,7 @@ class ScanController extends ChangeNotifier {
     cameraStreamSubscription = cameraStream.listen(handleStreamListener);
   }
 
-  void handleStreamListener(Barcode event) {
+  void handleStreamListener(event) {
     checkIfValid(event.code);
 
     // The stream is canceled when a value is detected
@@ -42,17 +44,27 @@ class ScanController extends ChangeNotifier {
   }
 
   void checkIfValid(String data) async {
-    var response = await http.get("$kAPIBaseUrl/seed/$data");
+    try {
+      var response = await http.get("$kAPIBaseUrl/seed/$data");
 
-    if (response.statusCode == 200) {
-      VerificationModel verification =
-          VerificationModel.fromJson(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        VerificationModel verification =
+            VerificationModel.fromJson(jsonDecode(response.body));
 
-      isValid = verification.isValid;
+        isValid = verification.isValid;
+        hasLoadedCode = true;
+      } else {
+        hasError = true;
+        hasLoadedCode = true;
+      }
+    } catch (_) {
+      // If for some reason the API call wasn't successful,
+      // a message will be displayed to the user indicating so.
+      hasError = true;
       hasLoadedCode = true;
-
-      notifyListeners();
     }
+
+    notifyListeners();
   }
 
   @override

@@ -32,14 +32,25 @@ class ScanPage extends StatelessWidget {
               ),
             ),
           ),
-          Consumer<ScanController>(builder: (
-            BuildContext context,
-            ScanController controller,
-            Widget child,
-          ) {
-            return Expanded(
-              flex: 1,
-              child: Visibility(
+          Expanded(
+            flex: 1,
+            child: Consumer<ScanController>(builder: (
+              BuildContext context,
+              ScanController controller,
+              Widget child,
+            ) {
+              if (controller.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "The call to the server failed. Please try again later or check your network connection.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.red),
+                  ),
+                );
+              }
+              
+              return Visibility(
                 visible: controller.hasLoadedCode,
                 child: Text(
                   controller.isValid
@@ -49,9 +60,9 @@ class ScanPage extends StatelessWidget {
                     color: controller.isValid ? Colors.green : Colors.red,
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
         ],
       ),
     );

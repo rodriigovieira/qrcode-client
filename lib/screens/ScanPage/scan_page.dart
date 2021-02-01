@@ -14,8 +14,13 @@ class ScanPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Text(
-            "Scan the QR Code to check whether it's still valid or not.",
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "Scan the QR Code to check whether it's still valid or not.",
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
           ),
           Expanded(
             flex: 4,

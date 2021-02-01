@@ -16,7 +16,7 @@ class ClientHttpService implements IClientHttp {
 
   @override
   Future get(String path) async {
-    Response response = await dio.get(path);
+    var response = await dio.get(path);
 
     return response.data;
   }

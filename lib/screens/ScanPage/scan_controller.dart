@@ -15,22 +15,30 @@ class ScanController extends ChangeNotifier {
   bool hasLoadedCode = false;
 
   void scanAgain() {
+    // The stream is recreated whenever
+    // the uses tap on the "scan again" button.
     hasLoadedCode = false;
     notifyListeners();
+    
+    // The stream is destroyed and recreated
+    // so that when it's scanned again,
+    // the last value found isn't kept,
+    // thus starting from scratch.
+    cameraStreamSubscription = cameraStream.listen(handleStreamListener);
+  }
 
-    cameraStreamSubscription = cameraStream.listen((event) {
-      checkIfValid(event.code);
-      cameraStreamSubscription.cancel();
-    });
+  void handleStreamListener(Barcode event) {
+    checkIfValid(event.code);
+
+    // The stream is canceled when a value is detected
+    // to avoid multiple API calls.
+    cameraStreamSubscription.cancel();
   }
 
   void onQRViewCreated(QRViewController controller) async {
     cameraStream = controller.scannedDataStream.asBroadcastStream();
 
-    cameraStreamSubscription = cameraStream.listen((event) {
-      checkIfValid(event.code);
-      cameraStreamSubscription.cancel();
-    });
+    cameraStreamSubscription = cameraStream.listen(handleStreamListener);
   }
 
   void checkIfValid(String data) async {

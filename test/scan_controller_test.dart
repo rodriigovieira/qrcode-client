@@ -1,16 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:qrcode_client/interfaces/http_client_interface.dart';
 import 'package:qrcode_client/models/seed_model.dart';
 import 'package:qrcode_client/models/verification_model.dart';
 import 'package:qrcode_client/screens/ScanPage/scan_controller.dart';
+import 'package:qrcode_client/services/http_client.dart';
 
 class MockClient extends Mock implements IClientHttp {}
 
 main() {
+  GetIt getIt = GetIt.I;
+
   final mock = MockClient();
 
-  final ScanController controller = ScanController(httpClient: mock);
+  getIt.registerSingleton<IClientHttp>(mock);
+
+  final ScanController controller = ScanController();
 
   final SeedModel seedModel = SeedModel(
     expiresAt: DateTime.now().add(Duration(minutes: 1)).toIso8601String(),

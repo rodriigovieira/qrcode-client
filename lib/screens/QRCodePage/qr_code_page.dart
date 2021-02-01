@@ -23,11 +23,16 @@ class QRCodePage extends StatelessWidget {
           }
 
           if (controller.hasError) {
-            return Text(
-              "It was not possible to fetch the QR Code. Please check your network connection or try again later.",
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                "It was not possible to fetch the QR Code. Please check your network connection or try again later.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
             );
           }
-          
+
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

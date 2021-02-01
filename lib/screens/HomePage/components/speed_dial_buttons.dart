@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:qrcode_client/screens/HomePage/components/fab_with_animation.dart';
 import 'dart:math' as math;
 
-import 'package:qrcode_client/screens/HomePage/fab_with_animation.dart';
 import 'package:qrcode_client/screens/QRCodePage/qr_code_page.dart';
 import 'package:qrcode_client/screens/ScanPage/scan_page.dart';
 

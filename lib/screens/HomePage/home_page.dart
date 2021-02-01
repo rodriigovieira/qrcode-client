@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:qrcode_client/screens/HomePage/components/speed_dial_buttons.dart';
 
-import 'package:qrcode_client/screens/HomePage/speed_dial_buttons.dart';
 
 class HomePage extends StatefulWidget {
   static const String pageId = "/";

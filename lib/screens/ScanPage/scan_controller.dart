@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qrcode_client/interfaces/http_client_interface.dart';
 import 'package:qrcode_client/models/verification_model.dart';
-import 'package:qrcode_client/services/http_client.dart';
 
 class ScanController extends ChangeNotifier {
   StreamSubscription cameraStreamSubscription;
@@ -14,7 +13,9 @@ class ScanController extends ChangeNotifier {
   bool hasLoadedCode = false;
   bool hasError = false;
 
-  IClientHttp httpClient = ClientHttpService();
+  final IClientHttp httpClient;
+
+  ScanController({@required this.httpClient});
 
   void scanAgain() {
     // The stream is recreated whenever

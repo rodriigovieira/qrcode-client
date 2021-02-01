@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:qrcode_client/interfaces/http_client_interface.dart';
 import 'package:qrcode_client/models/seed_model.dart';
-import 'package:qrcode_client/services/http_client.dart';
 
 class QRCodeController extends ChangeNotifier {
   bool loading = false;
@@ -12,9 +10,9 @@ class QRCodeController extends ChangeNotifier {
   String seed = "";
   int secondsLeft = 0;
 
-  IClientHttp httpClient = ClientHttpService();
+  final IClientHttp httpClient;
 
-  QRCodeController() {
+  QRCodeController({@required this.httpClient}) {
     handleLoading();
   }
 

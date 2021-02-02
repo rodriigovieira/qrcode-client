@@ -25,10 +25,20 @@ class QRCodePage extends StatelessWidget {
           if (controller.hasError) {
             return Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "It was not possible to fetch the QR Code. Please check your network connection or try again later.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "It was not possible to fetch the QR Code. Please check your network connection or try again later.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 10),
+                  RaisedButton(
+                    onPressed: controller.handleLoading,
+                    child: Text("Try again"),
+                  ),
+                ],
               ),
             );
           }

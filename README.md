@@ -86,3 +86,9 @@ flutter test
 ```
 
 It should work out of the box - no additional setup is required to run the tests.
+
+## Running the app
+
+By default, the app will try to connect to the address `http://localhost:3000` - that's the default address configured in the backend project. However, feel free to change it to any other address/port of your preference.
+
+You can change it in the `constants.dart` file, changing the `kAPIBaseUrl` variable.

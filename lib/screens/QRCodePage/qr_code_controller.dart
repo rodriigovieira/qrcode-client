@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:qrcode_client/interfaces/http_client_interface.dart';
+import 'package:qrcode_client/interfaces/qr_code_repository_interface.dart';
 import 'package:qrcode_client/models/seed_model.dart';
-import 'package:qrcode_client/services/http_client.dart';
 
 class QRCodeController extends ChangeNotifier {
+  final IQRCodeRepository repository = GetIt.I.get<IQRCodeRepository>();
+
   bool loading = false;
   bool hasError = false;
   String seed = "";
   int secondsLeft = 0;
-
-  final IClientHttp httpClient = GetIt.I.get<IClientHttp>();
 
   QRCodeController() {
     handleLoading();
@@ -37,15 +36,13 @@ class QRCodeController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      var response = await httpClient.get("/seed");
+      SeedModel seedModel = await repository.getSeed();
 
-      SeedModel data = SeedModel.fromJson(response);
-
-      DateTime expireDate = DateTime.parse(data.expiresAt);
+      DateTime expireDate = DateTime.parse(seedModel.expiresAt);
       Duration timeLeft = expireDate.difference(DateTime.now());
 
       loading = false;
-      seed = data.seed;
+      seed = seedModel.seed;
       secondsLeft = timeLeft.inSeconds;
 
       notifyListeners();

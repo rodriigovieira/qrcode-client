@@ -4,7 +4,6 @@ import 'package:mockito/mockito.dart';
 import 'package:qrcode_client/interfaces/http_client_interface.dart';
 import 'package:qrcode_client/models/seed_model.dart';
 import 'package:qrcode_client/screens/QRCodePage/qr_code_controller.dart';
-import 'package:qrcode_client/services/http_client.dart';
 
 class MockClient extends Mock implements IClientHttp {}
 

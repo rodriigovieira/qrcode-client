@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:qrcode_client/interfaces/http_client_interface.dart';
+import 'package:qrcode_client/interfaces/scan_repository_interface.dart';
 import 'package:qrcode_client/models/verification_model.dart';
-import 'package:qrcode_client/services/http_client.dart';
 
 class ScanController extends ChangeNotifier {
   StreamSubscription cameraStreamSubscription;
@@ -15,7 +14,7 @@ class ScanController extends ChangeNotifier {
   bool hasLoadedCode = false;
   bool hasError = false;
 
-  final IClientHttp httpClient = GetIt.I.get<IClientHttp>();
+  final IScanRepository repository = GetIt.I.get<IScanRepository>();
 
   void scanAgain() {
     // The stream is recreated whenever
@@ -47,11 +46,10 @@ class ScanController extends ChangeNotifier {
 
   Future<void> checkIfValid(String data) async {
     try {
-      var response = await httpClient.get("/seed/$data");
+      VerificationModel verificationModel =
+          await repository.validateQRCode(data);
 
-      VerificationModel verification = VerificationModel.fromJson(response);
-
-      isValid = verification.isValid;
+      isValid = verificationModel.isValid;
       hasLoadedCode = true;
     } catch (e) {
       // If for some reason the API call wasn't successful,

@@ -8,6 +8,8 @@ import 'package:qrcode_client/models/seed_model.dart';
 class QRCodeController extends ChangeNotifier {
   final IQRCodeRepository repository = GetIt.I.get<IQRCodeRepository>();
 
+  Timer countdownTimer;
+
   bool loading = false;
   bool hasError = false;
   String seed = "";
@@ -18,7 +20,7 @@ class QRCodeController extends ChangeNotifier {
   }
 
   void updateTimeLeft() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    countdownTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       if (secondsLeft < 1) {
         timer.cancel();
         handleLoading();
@@ -53,5 +55,11 @@ class QRCodeController extends ChangeNotifier {
       hasError = true;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    countdownTimer.cancel();
+    super.dispose();
   }
 }

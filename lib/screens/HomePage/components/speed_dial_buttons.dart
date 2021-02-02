@@ -47,17 +47,20 @@ class _SpeedDialButtonsState extends State<SpeedDialButtons>
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         FABWithAnimation(
           controller: _controller,
           icon: Icons.camera_alt,
           onPressed: goToScanPage,
+          label: "Scan",
         ),
         FABWithAnimation(
           controller: _controller,
           icon: Icons.qr_code,
           onPressed: goToQRCodePage,
+          label: "Create",
         ),
         Container(
           margin: EdgeInsets.only(top: 10),
